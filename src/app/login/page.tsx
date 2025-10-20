@@ -1,116 +1,87 @@
 "use client";
-import React from "react";
-import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  Button,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-  Input,
-} from "@/components/ui";
-import { HiOutlineChevronLeft } from "react-icons/hi";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import Image from "next/image";
+import { FaChevronLeft } from "react-icons/fa";
+import { Checkbox } from "@/components/ui/checkbox";
 
-const formSchema = z.object({
-  email: z.email({
-    message: "Invalid email. Use a format like example@email.com.",
-  }),
-  password: z.string({ message: "Incorrect password. Please try again." }),
-});
+const Page = () => {
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
-const LoginPage = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+  const router = useRouter();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
-
+  const onLogin = async () => {
+    const result = await fetch("http://localhost:4000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+    const response = await result.json();
+    if (response.success) {
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("password", password);
+      router.push("/");
+    } else {
+      alert("Login failed");
+    }
+  };
   return (
-    <div className="w-360 h-256 flex m-auto py-5 pr-5 pl-25 gap-12">
-      <div className="mt-[226px]">
-        <div className="flex flex-col gap-6">
-          <Button variant={"outline"} className="w-fit">
-            <HiOutlineChevronLeft className="size-4" />
-          </Button>
-
-          <div>
-            <h2 className="text-2xl leading-8 font-semibold text-foreground mb-1">
-              Log in
-            </h2>
-            <p className="text-base leading-6 text-muted-foreground">
-              Log in to enjoy your favorite dishes.
-            </p>
+    <div className="flex items-center justify-center h-screen gap-12">
+      <div className="w-104 h-90  border-2 flex flex-col gap-4">
+        <div className="w-9 h-9 flex justify-center items-center rounded-xl bg-white">
+          <FaChevronLeft className="w-4 h-4" />
+        </div>
+        <div className="w-full h-15 flex flex-col gap-1">
+          <div className=" text-2xl font-semibold">Login</div>
+          <div className=" text-base font-normal leading-normal">
+            Login to enjoy your favourite dishes
           </div>
+        </div>
+        <div className="w-full h-31 flex flex-col gap-4">
+          <Input
+            type="email"
+            placeholder="Enter your email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem className="w-104">
-                    <FormControl>
-                      <Input
-                        placeholder="Enter your email address"
-                        {...field}
-                        className="py-2"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="w-104">
-                    <FormControl>
-                      <Input
-                        placeholder="Password"
-                        {...field}
-                        className="py-2"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Link href="/forget-pass">
-                <p className="mb-6 underline">Forgot password ?</p>
-              </Link>
+          <Input
+            type="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-              <Button
-                variant={"secondary"}
-                type="submit"
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/20"
-              >
-                Let's Go
-              </Button>
+          <h3 className="text-secondary-foreground text-sm font-normal underline leading-tight">
+            Forgot password ?
+          </h3>
+        </div>
 
-              <Link href="/signup" className="text-center text-base leading-6">
-                <p className="mt-2 text-muted-foreground">
-                  Don’t have an account?
-                  <span className="pl-3 text-blue-600">Sign up</span>
-                </p>
-              </Link>
-            </form>
-          </Form>
+        <Button
+          variant="outline"
+          onClick={onLogin}
+          className="w-full h-9 bg-black text-white"
+        >
+          Let's go
+        </Button>
+        <div className="w-full h-6 self-stretch flex justify-center items-center gap-3">
+          <div className="justify-center text-muted-foreground text-base font-normal  leading-normal">
+            Don’t have an account?
+          </div>
+          <div className="justify-center text-blue-primary text-base font-normal  leading-normal">
+            Sign up
+          </div>
         </div>
       </div>
-
-      <div className="rounded-2xl overflow-hidden">
+      <div className="w-214 h-226 rounded-2xl overflow-hidden ">
         <Image
           width={856}
           height={904}
@@ -122,4 +93,5 @@ const LoginPage = () => {
     </div>
   );
 };
-export default LoginPage;
+
+export default Page;
