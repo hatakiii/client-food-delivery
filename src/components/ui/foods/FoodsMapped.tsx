@@ -26,7 +26,7 @@ export const FoodsMapped = () => {
   }, []);
 
   return (
-    <div className="bg-[#404040]">
+    <div className="bg-[#404040] p-22">
       {categories.map((category) => {
         return (
           <CategorizedFoods
