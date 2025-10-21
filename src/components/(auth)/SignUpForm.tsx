@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 const formSchema = z.object({
   email: z.email({
@@ -37,7 +38,7 @@ export const SignUpForm = ({ setEmail, handleNextStep }: any) => {
 
   return (
     // <div className="border rounded-xl max-w-2xl">
-    <div className="w-full h-screen flex justify-between p-5">
+    <div className="w-screen h-screen flex justify-between items-center">
       <div className="flex items-center ml-25">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -88,11 +89,24 @@ export const SignUpForm = ({ setEmail, handleNextStep }: any) => {
           </form>
         </Form>
       </div>
-      <div className="w-214 h-screen">
-        <img
+      {/* <div className="w-[60vw] h-screen">
+        <Image
           src={"./delivery.svg"}
-          className="rounded-2xl w-214 h-screen object-cover"
+          alt="nomnom"
+          fill
+          className="rounded-2xl object-cover"
         />
+      </div> */}
+      <div className="w-full h-screen p-5">
+        {/* 20px = 5 * 4px (Tailwind spacing scale) */}
+        <div className="relative w-full h-full">
+          <Image
+            src="/delivery.svg"
+            alt="nomnom"
+            fill
+            className="rounded-2xl object-cover"
+          />
+        </div>
       </div>
     </div>
   );
