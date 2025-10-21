@@ -5,6 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { FaChevronLeft } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
 
 const Page = () => {
   const [step, setStep] = useState<number>(1);
@@ -25,9 +26,10 @@ const Page = () => {
       body: JSON.stringify({
         email,
         password,
+        role: "USER",
       }),
     });
-    alert("User created");
+    alert("Something happened");
     console.log("User created:", result);
   };
 
@@ -101,6 +103,7 @@ const Page = () => {
           </div>
 
           {error && <p className="text-red-500">{error}</p>}
+          {/* <Link href={"/login"}> */}
           <Button
             variant="outline"
             onClick={onCreateUser}
@@ -108,6 +111,7 @@ const Page = () => {
           >
             Lets Go
           </Button>
+
           <div className="w-full h-6 self-stretch flex justify-center items-center gap-3">
             <div className="justify-center text-muted-foreground text-base font-normal  leading-normal">
               Already have an account?
