@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaChevronLeft } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -12,6 +12,15 @@ const Page = () => {
   const [email, setEmail] = useState<string>("");
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage) {
+      const loggedInEmail = localStorage.getItem("userEmail");
+      if (loggedInEmail) {
+        router.push("/");
+      }
+    }
+  }, [router]);
 
   const onLogin = async () => {
     const result = await fetch("http://localhost:4000/api/login", {
@@ -27,7 +36,7 @@ const Page = () => {
     const response = await result.json();
     if (response.success) {
       localStorage.setItem("userEmail", email);
-      localStorage.setItem("password", password);
+
       router.push("/");
     } else {
       alert("Login failed");

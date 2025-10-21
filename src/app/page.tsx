@@ -1,9 +1,19 @@
+"use client";
 import Image from "next/image";
-import React from "react";
-import { Header } from "./_components";
-import { FoodsMapped } from "@/components/ui/foods";
+import React, { useEffect } from "react";
+import { Footer, Header } from "./_components";
+import { FoodsMapped } from "@/components/foods/FoodsMapped";
+import { useRouter } from "next/navigation";
 
 const Homepage = () => {
+  const route = useRouter();
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (!email) {
+      route.push("/login");
+    }
+  }, [route]);
+
   return (
     <>
       <Header />
@@ -15,6 +25,7 @@ const Homepage = () => {
         className="w-full"
       />
       <FoodsMapped />
+      <Footer />
     </>
   );
 };
