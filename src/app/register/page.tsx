@@ -2,11 +2,15 @@
 import SignUpForm from "@/components/(auth)/SignUpForm";
 import { SignUpPassword } from "@/components/(auth)/SignUpPassword";
 import { useState } from "react";
+import { StepProps } from "@/lib/types";
 
 const RegisterPage = () => {
   const [step, setStep] = useState<number>(0);
   const [email, setEmail] = useState<string>("");
-  const StepComponents = [SignUpForm, SignUpPassword][step];
+  // const StepComponents = [SignUpForm, SignUpPassword][step];
+  const steps: React.ComponentType<StepProps>[] = [SignUpForm, SignUpPassword];
+  const StepComponents = steps[step];
+
   const handleNextStep = () => {
     setStep((prev) => prev + 1);
   };

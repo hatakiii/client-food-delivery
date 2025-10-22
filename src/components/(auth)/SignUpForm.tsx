@@ -15,6 +15,7 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { StepProps } from "@/lib/types";
 
 const formSchema = z.object({
   email: z.email({
@@ -22,7 +23,7 @@ const formSchema = z.object({
   }),
 });
 
-export const SignUpForm = ({ setEmail, handleNextStep }: any) => {
+export const SignUpForm = ({ setEmail, handleNextStep }: StepProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
