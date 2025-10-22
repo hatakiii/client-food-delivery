@@ -43,8 +43,8 @@ const Page = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center h-screen gap-12">
-      <div className="w-104 h-90  border-2 flex flex-col gap-4">
+    <div className="flex items-center justify-end h-screen gap-12">
+      <div className="w-104 h-90  flex flex-col gap-4">
         <div className="w-9 h-9 flex justify-center items-center rounded-xl bg-white">
           <FaChevronLeft className="w-4 h-4" />
         </div>
@@ -90,11 +90,11 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className="w-214 h-226 rounded-2xl overflow-hidden ">
+      <div className="w-[60vw] h-[95vh]  rounded-2xl overflow-hidden mr-5">
         <Image
           width={856}
           height={904}
-          src="/login.jpg"
+          src={"/login.jpg"}
           alt="image"
           className="object-cover w-full h-full"
         />

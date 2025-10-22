@@ -18,6 +18,7 @@ import { ChevronLeft, Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 // ✅ Fix schema to check that passwords match
 const formSchema = z
@@ -61,7 +62,7 @@ export const SignUpPassword = ({
         },
         body: JSON.stringify({
           email,
-          password: values.password, // ✅ Use form values
+          password: values.password,
           role: "USER",
         }),
       });
@@ -81,8 +82,8 @@ export const SignUpPassword = ({
   }
 
   return (
-    <div className="w-full h-screen flex justify-between p-5">
-      <div className="flex items-center ml-25">
+    <div className="w-full h-screen flex justify-end p-5">
+      <div className="flex items-center mr-12">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             {/* PASSWORD */}
@@ -169,10 +170,13 @@ export const SignUpPassword = ({
         </Form>
       </div>
 
-      <div className="w-214 h-screen">
-        <img
-          src={"./delivery.svg"}
-          className="rounded-2xl w-214 h-screen object-cover"
+      <div className="w-[60vw] h-[95vh]  rounded-2xl overflow-hidden mr-5">
+        <Image
+          width={856}
+          height={904}
+          src={"/login.jpg"}
+          alt="image"
+          className="object-cover w-full h-full"
         />
       </div>
     </div>

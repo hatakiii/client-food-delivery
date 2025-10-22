@@ -38,8 +38,8 @@ export const SignUpForm = ({ setEmail, handleNextStep }: any) => {
 
   return (
     // <div className="border rounded-xl max-w-2xl">
-    <div className="w-screen h-screen flex justify-between items-center">
-      <div className="flex items-center ml-25">
+    <div className="w-screen h-screen flex justify-end items-center">
+      <div className="flex items-center mr-12">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
@@ -89,24 +89,15 @@ export const SignUpForm = ({ setEmail, handleNextStep }: any) => {
           </form>
         </Form>
       </div>
-      {/* <div className="w-[60vw] h-screen">
+
+      <div className="w-[60vw] h-[95vh]  rounded-2xl overflow-hidden mr-5">
         <Image
-          src={"./delivery.svg"}
-          alt="nomnom"
-          fill
-          className="rounded-2xl object-cover"
+          width={856}
+          height={904}
+          src={"/login.jpg"}
+          alt="image"
+          className="object-cover w-full h-full"
         />
-      </div> */}
-      <div className="w-full h-screen p-5">
-        {/* 20px = 5 * 4px (Tailwind spacing scale) */}
-        <div className="relative w-full h-full">
-          <Image
-            src="/delivery.svg"
-            alt="nomnom"
-            fill
-            className="rounded-2xl object-cover"
-          />
-        </div>
       </div>
     </div>
   );
