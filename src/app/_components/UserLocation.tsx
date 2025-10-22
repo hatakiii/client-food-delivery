@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CiLocationOn } from "react-icons/ci";
 import { FaChevronRight } from "react-icons/fa";
+import { Textarea } from "@/components/ui/textarea";
 
 export const UserLocation = () => {
   return (
@@ -31,33 +32,35 @@ export const UserLocation = () => {
               <FaChevronRight className="w-5 h-5 text-[#18181B80]" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[502px] rounded-[20px] gap-6">
             <DialogHeader>
-              <DialogTitle>Edit profile</DialogTitle>
-              <DialogDescription>
-                Make changes to your profile here. Click save when you&apos;re
-                done.
-              </DialogDescription>
+              <DialogTitle>Please write your delivery address!</DialogTitle>
+              <DialogDescription />
             </DialogHeader>
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <Label htmlFor="name-1">Name</Label>
-                <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="username-1">Username</Label>
-                <Input
-                  id="username-1"
-                  name="username"
-                  defaultValue="@peduarte"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              <Button type="submit">Save changes</Button>
+
+            <Textarea
+              placeholder="Please share your complete address"
+              className="text-sm h-20"
+              // value={address}
+              // onChange={addressHandler}
+            />
+
+            <DialogFooter className="flex-row gap-4 mt-6">
+              <Button
+                // onClick={handleCloseAddressInput}
+                type="button"
+                variant="outline"
+                className="h-10"
+              >
+                Cancel
+              </Button>
+              <Button
+                // onClick={handleAddAddressToCart}
+                type="button"
+                className="h-10"
+              >
+                Deliver Here
+              </Button>
             </DialogFooter>
           </DialogContent>
         </form>
