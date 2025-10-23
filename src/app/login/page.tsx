@@ -7,6 +7,15 @@ import Image from "next/image";
 import { FaChevronLeft } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
 
+let backendUrl = "";
+
+const env = process.env.NODE_ENV;
+if (env == "development") {
+  backendUrl = "http://localhost:4000";
+} else if (env == "production") {
+  backendUrl = "https://backend-food-delivery-two.vercel.app";
+}
+
 const Page = () => {
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -23,7 +32,7 @@ const Page = () => {
   }, [router]);
 
   const onLogin = async () => {
-    const result = await fetch("http://localhost:4000/api/login", {
+    const result = await fetch(`${backendUrl}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

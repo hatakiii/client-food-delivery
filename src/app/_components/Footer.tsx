@@ -5,10 +5,19 @@ import { CategoryType } from "@/lib/types";
 import { FaFacebook } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 
+let backendUrl = "";
+
+const env = process.env.NODE_ENV;
+if (env == "development") {
+  backendUrl = "http://localhost:4000";
+} else if (env == "production") {
+  backendUrl = "https://backend-food-delivery-two.vercel.app";
+}
+
 export const Footer = () => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const getCategories = async () => {
-    const result = await fetch("http://localhost:4000/api/categories");
+    const result = await fetch(`${backendUrl}/api/categories`);
     const responseData = await result.json();
     const { data } = responseData;
     setCategories(data);
