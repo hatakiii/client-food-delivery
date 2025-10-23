@@ -1,5 +1,6 @@
 "use client";
 import { CategoryType, FoodType } from "@/lib/types";
+import { FoodDetail } from "./FoodDetail";
 
 export const CategorizedFoods = ({
   foods,
@@ -23,6 +24,7 @@ export const CategorizedFoods = ({
                 alt=""
                 className="w-full h-full object-fill rounded-xl "
               />
+              <FoodDetail />
             </div>
 
             <div className="w-91 h-20 flex flex-col gap-2">
