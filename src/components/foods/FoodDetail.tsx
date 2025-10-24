@@ -1,3 +1,4 @@
+//FoodDetail.tsx
 "use client";
 
 import { useState } from "react";
@@ -26,26 +27,33 @@ if (env == "development") {
 export const FoodDetail = ({ food }: FoodDetailProps) => {
   const [quantity, setQuantity] = useState(1);
 
-  // const handleAddToCart = async () => {
-  //   try {
-  //     const res = await fetch(`${backendUrl}/api/order`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         userId: "671870cd112233aa11223344", // replace with logged-in user id
-  //         items: [{ foodId: food._id, quantity }],
-  //         totalPrice: food.price * quantity,
-  //       }),
-  //     });
+  const handleAddToCart = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
 
-  //     if (!res.ok) throw new Error("Failed to add to cart");
+      if (!userId) {
+        alert("⚠️ Please log in first!");
+        return;
+      }
 
-  //     alert(`✅ ${food.name} added to cart!`);
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("❌ Failed to add to cart");
-  //   }
-  // };
+      const res = await fetch(`${backendUrl}/api/order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: userId,
+          items: [{ foodId: food._id, quantity }],
+          totalPrice: food.price * quantity,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to add to cart");
+
+      alert(`✅ ${food.name} added to cart!`);
+    } catch (err) {
+      console.error(err);
+      alert("❌ Failed to add to cart");
+    }
+  };
 
   return (
     <Dialog>
@@ -106,7 +114,7 @@ export const FoodDetail = ({ food }: FoodDetailProps) => {
 
             {/* Add to Cart Button */}
             <Button
-              // onClick={handleAddToCart}
+              onClick={handleAddToCart}
               className="mt-6 bg-red-500 hover:bg-red-600 text-white rounded-full h-11"
             >
               Add to Cart

@@ -1,3 +1,4 @@
+//UserCart.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -74,6 +75,41 @@ export const UserCart = () => {
     } catch (err) {
       console.error(err);
       alert("❌ Failed to delete order");
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+
+      if (!userId) {
+        alert("⚠️ Please log in first!");
+        return;
+      }
+
+      const res = await fetch(`${backendUrl}/api/checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+
+      const data = await res.json();
+
+      // ✅ Handle specific backend messages
+      if (res.status === 404) {
+        alert("🛒 No pending orders to checkout.");
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(data.message || "Checkout failed");
+      }
+
+      alert(`✅ ${data.message}`);
+      fetchOrders(); // refresh cart after checkout
+    } catch (err) {
+      console.error("Checkout error:", err);
+      alert("❌ Checkout failed. Please try again.");
     }
   };
 
@@ -222,7 +258,7 @@ export const UserCart = () => {
                   <Button
                     variant="destructive"
                     className="w-full rounded-full bg-red-500 mt-4"
-                    onClick={() => alert("🧾 Checkout does nothing yet")}
+                    onClick={handleCheckout}
                   >
                     Checkout
                   </Button>
