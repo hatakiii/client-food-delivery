@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { CiShoppingCart } from "react-icons/ci";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { IoCloseOutline } from "react-icons/io5";
+import { UserLocation } from "@/app/_components/UserLocation";
 import {
   Sheet,
   SheetContent,
@@ -50,12 +51,15 @@ export const UserCart = () => {
   const [pendingOrders, setPendingOrders] = useState<FoodOrder[]>([]);
   const [deliveredOrders, setDeliveredOrders] = useState<FoodOrder[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [deliveryAddress, setDeliveryAddress] = useState("");
 
-  // ✅ Fetch all orders and split by status
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${backendUrl}/api/order`);
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
+
+      const res = await fetch(`${backendUrl}/api/order?userId=${userId}`);
       const data = await res.json();
 
       const allOrders: FoodOrder[] = data.data || [];
@@ -87,37 +91,32 @@ export const UserCart = () => {
     }
   };
 
-  // ✅ Checkout handler
   const handleCheckout = async () => {
     try {
       const userId = localStorage.getItem("userId");
-      console.log("Checkout payload:", { userId });
-
       if (!userId) {
         alert("⚠️ Please log in first!");
+        return;
+      }
+
+      if (!deliveryAddress) {
+        alert("⚠️ Please add your delivery address before checkout!");
         return;
       }
 
       const res = await fetch(`${backendUrl}/api/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ userId, deliveryAddress }),
       });
 
       const data = await res.json();
 
-      if (res.status === 404) {
-        alert("🛒 No pending orders to checkout.");
-        return;
-      }
-
-      if (!res.ok) {
-        throw new Error(data.message || "Checkout failed");
-      }
+      if (!res.ok) throw new Error(data.message || "Checkout failed");
 
       alert(`✅ ${data.message}`);
-      await fetchOrders(); // refresh both lists after checkout
-      setActive("order"); // ✅ switch view to Order History
+      await fetchOrders();
+      setActive("order");
     } catch (err) {
       console.error("Checkout error:", err);
       alert("❌ Checkout failed. Please try again.");
@@ -253,6 +252,10 @@ export const UserCart = () => {
                             </div>
                           </div>
                         ))}
+
+                        <UserLocation
+                          onSelectAddress={(addr) => setDeliveryAddress(addr)}
+                        />
 
                         <Separator className="my-4 border border-dashed border-[rgba(9,9,11,0.5)] bg-transparent" />
                         <div className="flex justify-between">

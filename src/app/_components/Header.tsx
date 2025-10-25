@@ -9,6 +9,8 @@ import { UserLocation } from "./UserLocation";
 
 export const Header = () => {
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+
   const router = useRouter();
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
@@ -28,7 +30,7 @@ export const Header = () => {
       <Image src="/NomNomSwift.svg" alt="icon" width={146} height={44} />
 
       <div className="flex gap-3">
-        <UserLocation />
+        <UserLocation onSelectAddress={(addr) => setDeliveryAddress(addr)} />
 
         <UserCart />
         <UserLogout userEmail={userEmail} onLogout={onLogout} />
