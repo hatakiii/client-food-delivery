@@ -1,4 +1,3 @@
-//UserCart.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -29,6 +28,7 @@ interface FoodItem {
 interface FoodOrder {
   _id: string;
   totalPrice: number;
+  status: string; // ✅ add status to distinguish Pending vs Delivered
   foodOrderItems: {
     _id: string;
     quantity: number;
@@ -39,24 +39,33 @@ interface FoodOrder {
 let backendUrl = "";
 
 const env = process.env.NODE_ENV;
-if (env == "development") {
+if (env === "development") {
   backendUrl = "http://localhost:4000";
-} else if (env == "production") {
+} else if (env === "production") {
   backendUrl = "https://backend-food-delivery-two.vercel.app";
 }
 
 export const UserCart = () => {
   const [active, setActive] = useState<"cart" | "order">("cart");
-  const [orders, setOrders] = useState<FoodOrder[]>([]);
+  const [pendingOrders, setPendingOrders] = useState<FoodOrder[]>([]);
+  const [deliveredOrders, setDeliveredOrders] = useState<FoodOrder[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // ✅ Fetch all orders on mount
+  // ✅ Fetch all orders and split by status
   const fetchOrders = async () => {
     try {
       setLoading(true);
       const res = await fetch(`${backendUrl}/api/order`);
       const data = await res.json();
-      setOrders(data.data || []);
+
+      const allOrders: FoodOrder[] = data.data || [];
+      const pending = allOrders.filter((order) => order.status === "PENDING");
+      const delivered = allOrders.filter(
+        (order) => order.status === "DELIVERED"
+      );
+
+      setPendingOrders(pending);
+      setDeliveredOrders(delivered);
     } catch (error) {
       console.error("Failed to fetch orders", error);
     } finally {
@@ -64,23 +73,25 @@ export const UserCart = () => {
     }
   };
 
-  // ✅ Delete order
+  // ✅ Delete a single pending order
   const handleDeleteOrder = async (orderId: string) => {
     try {
       const res = await fetch(`${backendUrl}/api/order/${orderId}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete order");
-      setOrders((prev) => prev.filter((o) => o._id !== orderId));
+      setPendingOrders((prev) => prev.filter((o) => o._id !== orderId));
     } catch (err) {
       console.error(err);
       alert("❌ Failed to delete order");
     }
   };
 
+  // ✅ Checkout handler
   const handleCheckout = async () => {
     try {
       const userId = localStorage.getItem("userId");
+      console.log("Checkout payload:", { userId });
 
       if (!userId) {
         alert("⚠️ Please log in first!");
@@ -95,7 +106,6 @@ export const UserCart = () => {
 
       const data = await res.json();
 
-      // ✅ Handle specific backend messages
       if (res.status === 404) {
         alert("🛒 No pending orders to checkout.");
         return;
@@ -106,7 +116,8 @@ export const UserCart = () => {
       }
 
       alert(`✅ ${data.message}`);
-      fetchOrders(); // refresh cart after checkout
+      await fetchOrders(); // refresh both lists after checkout
+      setActive("order"); // ✅ switch view to Order History
     } catch (err) {
       console.error("Checkout error:", err);
       alert("❌ Checkout failed. Please try again.");
@@ -159,24 +170,24 @@ export const UserCart = () => {
                 active === "order" ? "text-white" : "text-gray-700"
               )}
             >
-              Order
+              Orders
             </button>
           </div>
 
-          {/* Below Content */}
+          {/* Main Content */}
           <Card className="w-full">
             <CardContent className="text-center space-y-6">
               {active === "cart" ? (
                 <>
                   <p className="text-lg font-semibold text-red-500">
-                    🛒 Your Cart (Display Pending Orders)
+                    🛒 Your Cart (Pending Orders)
                   </p>
                   {loading ? (
                     <p>Loading...</p>
-                  ) : orders.length === 0 ? (
+                  ) : pendingOrders.length === 0 ? (
                     <p className="text-gray-500">No items in cart yet.</p>
                   ) : (
-                    orders.map((order) => (
+                    pendingOrders.map((order) => (
                       <div key={order._id} className="text-left space-y-4">
                         {order.foodOrderItems.map((item) => (
                           <div
@@ -219,7 +230,7 @@ export const UserCart = () => {
                               <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
                                   <Button
-                                    variant={"ghost"}
+                                    variant="ghost"
                                     size="icon"
                                     className="size-9"
                                   >
@@ -227,7 +238,7 @@ export const UserCart = () => {
                                   </Button>
                                   <span>{item.quantity}</span>
                                   <Button
-                                    variant={"ghost"}
+                                    variant="ghost"
                                     size="icon"
                                     className="size-9"
                                   >
@@ -255,22 +266,67 @@ export const UserCart = () => {
                   )}
 
                   {/* Checkout Button */}
-                  <Button
-                    variant="destructive"
-                    className="w-full rounded-full bg-red-500 mt-4"
-                    onClick={handleCheckout}
-                  >
-                    Checkout
-                  </Button>
+                  {pendingOrders.length > 0 && (
+                    <Button
+                      variant="destructive"
+                      className="w-full rounded-full bg-red-500 mt-4"
+                      onClick={handleCheckout}
+                    >
+                      Checkout
+                    </Button>
+                  )}
                 </>
               ) : (
                 <>
                   <p className="text-lg font-semibold text-red-500">
-                    📦 Orders
+                    📦 Order History
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    Your past orders will appear here.
-                  </p>
+                  {loading ? (
+                    <p>Loading...</p>
+                  ) : deliveredOrders.length === 0 ? (
+                    <p className="text-gray-500">No delivered orders yet.</p>
+                  ) : (
+                    deliveredOrders.map((order) => (
+                      <div key={order._id} className="text-left space-y-4">
+                        {order.foodOrderItems.map((item) => (
+                          <div
+                            key={item._id}
+                            className="flex gap-2.5 items-start"
+                          >
+                            <div className="w-31 h-30 relative overflow-hidden rounded-md">
+                              <Image
+                                src={item.food.imageUrl}
+                                alt={item.food.name}
+                                width={124}
+                                height={120}
+                                className="object-cover w-full h-full"
+                                unoptimized
+                              />
+                            </div>
+
+                            <div className="flex flex-col flex-1 gap-2">
+                              <div className="font-semibold">
+                                {item.food.name}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                ${item.food.price} × {item.quantity}
+                              </div>
+                              <div className="text-sm text-green-600 font-medium">
+                                ✅ Delivered
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        <Separator className="my-3 border border-dashed border-[rgba(9,9,11,0.5)] bg-transparent" />
+                        <div className="flex justify-between text-sm">
+                          <span>Total:</span>
+                          <span className="font-semibold">
+                            ${order.totalPrice.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </>
               )}
             </CardContent>
