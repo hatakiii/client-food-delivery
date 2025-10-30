@@ -26,6 +26,7 @@ export const Header = () => {
     localStorage.removeItem("userId");
     router.push("/login");
   };
+  console.log("delivery address", deliveryAddress);
   return (
     <div className="bg-[#18181B] w-full h-17 px-22 flex items-center justify-between">
       <Image src="/NomNomSwift.svg" alt="icon" width={146} height={44} />
