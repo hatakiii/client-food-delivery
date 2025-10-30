@@ -12,17 +12,18 @@ export const Header = () => {
   const [deliveryAddress, setDeliveryAddress] = useState("");
 
   const router = useRouter();
-  useEffect(() => {
-    const email = localStorage.getItem("userEmail");
-    if (!email) {
-      router.push("/login");
-    } else {
-      setUserEmail(email);
-    }
-  }, [router]);
+  // useEffect(() => {
+  //   const email = localStorage.getItem("userEmail");
+  //   if (!email) {
+  //     router.push("/login");
+  //   } else {
+  //     setUserEmail(email);
+  //   }
+  // }, [router]);
 
   const onLogout = () => {
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("userId");
     router.push("/login");
   };
   return (

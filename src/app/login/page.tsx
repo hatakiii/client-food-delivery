@@ -44,9 +44,9 @@ const Page = () => {
     const response = await result.json();
 
     if (response.success) {
-      const userData = response.data; // ✅ user info from backend
+      const userData = response.data;
       localStorage.setItem("userEmail", userData.email);
-      localStorage.setItem("userId", userData._id); // ✅ store userId for orders
+      localStorage.setItem("userId", userData._id);
 
       router.push("/");
     } else {
