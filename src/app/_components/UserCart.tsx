@@ -29,7 +29,7 @@ interface FoodItem {
 interface FoodOrder {
   _id: string;
   totalPrice: number;
-  status: string; // ✅ add status to distinguish Pending vs Delivered
+  status: string;
   foodOrderItems: {
     _id: string;
     quantity: number;
@@ -77,7 +77,6 @@ export const UserCart = () => {
     }
   };
 
-  // ✅ Delete a single pending order
   const handleDeleteOrder = async (orderId: string) => {
     try {
       const res = await fetch(`${backendUrl}/api/order/${orderId}`, {
