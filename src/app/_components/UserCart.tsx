@@ -22,6 +22,7 @@ import { CiShoppingCart } from "react-icons/ci";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { IoCloseOutline } from "react-icons/io5";
 import { UserLocation } from "@/app/_components/UserLocation";
+import { IoIosClose } from "react-icons/io";
 import {
   Sheet,
   SheetContent,
@@ -137,7 +138,7 @@ export const UserCart = () => {
   }, []);
 
   return (
-    <div className="w-134 h-full">
+    <div>
       <Sheet>
         <SheetTrigger asChild>
           <Button className="w-9 h-9 flex items-center justify-center rounded-full">
@@ -145,109 +146,131 @@ export const UserCart = () => {
           </Button>
         </SheetTrigger>
 
-        <SheetContent className="flex flex-col p-8 overflow-y-auto bg-[#71717a] ">
-          <SheetHeader>
+        <SheetContent className="flex flex-col p-8 overflow-y-auto bg-[#71717a] w-[535px] h-full overflow-hidden">
+          <SheetHeader className="p-0 w-full h-9 ">
             <SheetTitle>Order details</SheetTitle>
           </SheetHeader>
-          <div>
-            <div className="flex w-full max-w-sm flex-col gap-6">
-              <Tabs defaultValue="card">
-                <TabsList className="w-full h-11 bg-white">
-                  <TabsTrigger value="card">Card</TabsTrigger>
-                  <TabsTrigger value="order">Order</TabsTrigger>
-                </TabsList>
-                <TabsContent value="card" className="flex flex-col">
-                  <Card className="flex-1">
-                    <CardHeader>
-                      <CardTitle>My cart</CardTitle>
-                      <div className="w-full h-30 flex">
-                        <Image
-                          src={"/login.jpg"}
-                          alt=""
-                          width={124}
-                          height={120}
-                        />
-                        <div className="w-[305px] h-full">
-                          <p>Sunshine Stackers</p>
-                          <h1>
+
+          <Tabs defaultValue="card" className="w-[471px] h-full gap-6">
+            <TabsList className="w-full h-11 bg-white">
+              <TabsTrigger value="card">Card</TabsTrigger>
+              <TabsTrigger value="order">Order</TabsTrigger>
+            </TabsList>
+            <TabsContent
+              value="card"
+              className="flex flex-col flex-1 h-full gap-6"
+            >
+              <Card className="flex-1 w-[471px] h-[532px]">
+                <CardHeader>
+                  <CardTitle>My cart</CardTitle>
+                  <div className=" h-30 flex gap-[10px]">
+                    <Image src={"/login.jpg"} alt="" width={124} height={120} />
+                    <div className="w-[305px] h-30 flex flex-col gap-6">
+                      <div className="w-[305px] h-15 flex flex-col relative">
+                        <div className="w-[259px] h-7">
+                          <p className="text-red-500 text-base font-bold leading-7">
+                            Sunshine Stackers
+                          </p>
+                        </div>
+                        <div className="w-[259px] h-8">
+                          <h1 className="text-foreground text-xs font-normal leading-4">
                             Fluffy pancakes stacked with fruits, cream, syrup,
                             and powdered sugar.
                           </h1>
                         </div>
+                        <button className="absolute top-0 right-0 w-9 h-9 rounded-full border-1 border-[#EF4444] flex items-center justify-center">
+                          <IoIosClose className="text-[#EF4444]" />
+                        </button>
                       </div>
-                    </CardHeader>
-                    <CardContent className="grid gap-6">
-                      <div className="grid gap-3">
-                        <Label htmlFor="tabs-demo-name">
-                          Delivery Location
-                        </Label>
-                        <Input
-                          id="tabs-demo-name"
-                          placeholder="Please share your complete address"
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Payment info</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex">
-                        <p className="flex-1">Items</p>
-                        <h1>$25.98</h1>
-                      </div>
-                      <div className="flex">
-                        <p className="flex-1">Shipping</p>
-                        <h1>$0.99</h1>
-                      </div>
-                      <Separator className="w-full" />
-                      <div className="flex">
-                        <p className="flex-1">Total</p>
-                        <h1>$25.97</h1>
-                      </div>
-                      <Button className="w-full">Checkout</Button>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-                {/* Order */}
-                <TabsContent value="order">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Order History</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex">
-                        <div className="flex flex-1">
-                          <p>$26.97</p>
-                          <div>(#20156)</div>
+                      <div className="w-[305px] h-9 flex items-center justify-between">
+                        <div className="w-[105px] h-9 flex items-center justify-between">
+                          <div className="w-9 h-9 flex items-center justify-center text-xl">
+                            -
+                          </div>
+                          <div className="text-[#09090B] font-semibold text-lg/7">
+                            1
+                          </div>
+                          <div className="w-9 h-9 flex items-center justify-center text-xl">
+                            +
+                          </div>
                         </div>
-                        <div>Pending</div>
+                        <div className="w-[93px] h-7 text-right text-[#09090B] font-semibold text-lg/7">
+                          $12.99
+                        </div>
                       </div>
-                      <div className="flex">
-                        <p className="flex-1">Sunshine Stackers</p>
-                        <h1>x1</h1>
-                      </div>
-                      <div className="flex">
-                        <p className="flex-1">2024/12/20</p>
-                        <h1></h1>
-                      </div>
-                      <div className="flex">
-                        <p className="flex-1">
-                          2024/12/СБД, 12-р хороо, СБД нэгдсэн эмнэлэг Sbd
-                          negdsen emneleg | 100 айлын гүүрэн гарцны хойд талд 4д
-                          ногоонСБД, 12-р хороо, СБД нэгдсэн эмнэлэг Sbd negdsen
-                          emneleg | 100 айлын гүүрэн гарцны хойд талд 4д
-                          ногоон20
-                        </p>
-                        <h1></h1>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
-            </div>
-          </div>
+                    </div>
+                  </div>
+                  <Separator className="w-full border border-dashed border-[rgba(9,9,11,0.5)] bg-transparent" />
+                </CardHeader>
+                <CardContent className="grid gap-6">
+                  <div className="grid gap-3">
+                    <Label htmlFor="tabs-demo-name">Delivery Location</Label>
+                    <Input
+                      id="tabs-demo-name"
+                      placeholder="Please share your complete address"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+              <div className="mt-auto">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Payment info</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex">
+                      <p className="flex-1">Items</p>
+                      <h1>$25.98</h1>
+                    </div>
+                    <div className="flex">
+                      <p className="flex-1">Shipping</p>
+                      <h1>$0.99</h1>
+                    </div>
+                    <Separator className="w-full" />
+                    <div className="flex">
+                      <p className="flex-1">Total</p>
+                      <h1>$25.97</h1>
+                    </div>
+                    <Button className="w-full">Checkout</Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            {/* Order */}
+            <TabsContent value="order">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Order History</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex">
+                    <div className="flex flex-1">
+                      <p>$26.97</p>
+                      <div>(#20156)</div>
+                    </div>
+                    <div>Pending</div>
+                  </div>
+                  <div className="flex">
+                    <p className="flex-1">Sunshine Stackers</p>
+                    <h1>x1</h1>
+                  </div>
+                  <div className="flex">
+                    <p className="flex-1">2024/12/20</p>
+                    <h1></h1>
+                  </div>
+                  <div className="flex">
+                    <p className="flex-1">
+                      2024/12/СБД, 12-р хороо, СБД нэгдсэн эмнэлэг Sbd negdsen
+                      emneleg | 100 айлын гүүрэн гарцны хойд талд 4д ногоонСБД,
+                      12-р хороо, СБД нэгдсэн эмнэлэг Sbd negdsen emneleg | 100
+                      айлын гүүрэн гарцны хойд талд 4д ногоон20
+                    </p>
+                    <h1></h1>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </SheetContent>
       </Sheet>
     </div>

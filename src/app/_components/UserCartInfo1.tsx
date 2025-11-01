@@ -1,6 +1,6 @@
 // import React from 'react'
 
-// const UserCartInfo = () => {
+// const UserCartInfo1 = () => {
 //   return (
 //     <div>
 //         <div className="relative w-full h-11 bg-gray-200 rounded-full flex items-center justify-between my-6">
