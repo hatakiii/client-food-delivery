@@ -116,6 +116,7 @@ export const UserCart = () => {
           quantity: item.quantity,
         })),
         totalPrice: totalPrice + 0.99,
+        deliveryAddress,
       };
 
       const res = await fetch(`${backendUrl}/api/order`, {
