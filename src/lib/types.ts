@@ -18,3 +18,11 @@ export type StepProps = {
   handleNextStep: () => void;
   handlePrevStep: () => void;
 };
+
+export interface CartItem {
+  foodId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  imageUrl: string;
+}

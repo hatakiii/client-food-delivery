@@ -1,8 +1,7 @@
-//FoodDetail.tsx
 "use client";
 
-import { useState } from "react";
-import { FoodType } from "@/lib/types";
+import { useState, useEffect } from "react";
+import { CartItem, FoodType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,43 +15,39 @@ import {
 interface FoodDetailProps {
   food: FoodType;
 }
-let backendUrl = "";
 
-const env = process.env.NODE_ENV;
-if (env == "development") {
-  backendUrl = "http://localhost:4000";
-} else if (env == "production") {
-  backendUrl = "https://backend-food-delivery-two.vercel.app";
-}
 export const FoodDetail = ({ food }: FoodDetailProps) => {
   const [quantity, setQuantity] = useState(1);
+  const [, setCartChanged] = useState(false); // just to trigger re-render
 
-  const handleAddToCart = async () => {
-    try {
-      const userId = localStorage.getItem("userId");
-
-      if (!userId) {
-        alert("⚠️ Please log in first!");
-        return;
-      }
-
-      const res = await fetch(`${backendUrl}/api/order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userId,
-          items: [{ foodId: food._id, quantity }],
-          totalPrice: food.price * quantity,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to add to cart");
-
-      alert(`✅ ${food.name} added to cart!`);
-    } catch (err) {
-      console.error(err);
-      alert("❌ Failed to add to cart");
+  const handleAddToCart = () => {
+    if (!food._id) {
+      alert("❌ Cannot add item: invalid food ID");
+      return;
     }
+
+    const cart: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    const existingIndex = cart.findIndex((item) => item.foodId === food._id);
+
+    if (existingIndex >= 0) {
+      cart[existingIndex].quantity += quantity;
+    } else {
+      cart.push({
+        foodId: food._id,
+        name: food.name,
+        price: food.price,
+        quantity,
+        imageUrl: food.imageUrl,
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert(`✅ ${food.name} added to cart!`);
+
+    // Trigger re-render in this component and notify other components
+    setCartChanged((prev) => !prev);
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   return (
@@ -77,14 +72,12 @@ export const FoodDetail = ({ food }: FoodDetailProps) => {
         </DialogHeader>
 
         <div className="flex flex-col md:flex-row gap-6 mt-4">
-          {/* Image */}
           <img
             src={food.imageUrl}
             alt={food.name}
             className="rounded-xl w-full md:w-1/2 h-80 object-cover"
           />
 
-          {/* Details */}
           <div className="flex flex-col justify-between w-full md:w-1/2">
             <div>
               <p className="text-gray-500 mb-1">Total price</p>
@@ -93,7 +86,6 @@ export const FoodDetail = ({ food }: FoodDetailProps) => {
               </p>
             </div>
 
-            {/* Quantity Controls */}
             <div className="flex items-center gap-4 mt-6">
               <Button
                 variant="outline"
@@ -112,7 +104,6 @@ export const FoodDetail = ({ food }: FoodDetailProps) => {
               </Button>
             </div>
 
-            {/* Add to Cart Button */}
             <Button
               onClick={handleAddToCart}
               className="mt-6 bg-red-500 hover:bg-red-600 text-white rounded-full h-11"
