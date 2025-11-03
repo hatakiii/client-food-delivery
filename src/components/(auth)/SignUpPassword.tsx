@@ -30,7 +30,6 @@ if (env == "development") {
   backendUrl = "https://backend-food-delivery-two.vercel.app";
 }
 
-// ✅ Fix schema to check that passwords match
 const formSchema = z
   .object({
     password: z.string().min(6, "Must be above 6 characters").max(10),

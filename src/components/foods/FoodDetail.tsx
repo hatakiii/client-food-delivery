@@ -18,8 +18,7 @@ interface FoodDetailProps {
 
 export const FoodDetail = ({ food }: FoodDetailProps) => {
   const [quantity, setQuantity] = useState(1);
-  const [, setCartChanged] = useState(false); // just to trigger re-render
-
+  const [, setCartChanged] = useState(false);
   const handleAddToCart = () => {
     if (!food._id) {
       alert("❌ Cannot add item: invalid food ID");
@@ -45,7 +44,6 @@ export const FoodDetail = ({ food }: FoodDetailProps) => {
     localStorage.setItem("cart", JSON.stringify(cart));
     alert(`✅ ${food.name} added to cart!`);
 
-    // Trigger re-render in this component and notify other components
     setCartChanged((prev) => !prev);
     window.dispatchEvent(new Event("cartUpdated"));
   };

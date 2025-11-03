@@ -7,7 +7,7 @@ import { StepProps } from "@/lib/types";
 const RegisterPage = () => {
   const [step, setStep] = useState<number>(0);
   const [email, setEmail] = useState<string>("");
-  // const StepComponents = [SignUpForm, SignUpPassword][step];
+
   const steps: React.ComponentType<StepProps>[] = [SignUpForm, SignUpPassword];
   const StepComponents = steps[step];
 

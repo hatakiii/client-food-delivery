@@ -38,7 +38,6 @@ export const SignUpForm = ({ setEmail, handleNextStep }: StepProps) => {
   }
 
   return (
-    // <div className="border rounded-xl max-w-2xl">
     <div className="w-screen h-screen flex justify-end items-center">
       <div className="flex items-center mr-12">
         <Form {...form}>
