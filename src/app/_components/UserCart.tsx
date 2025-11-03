@@ -34,7 +34,6 @@ export const UserCart = () => {
   const [orderHistory, setOrderHistory] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
 
-  // Load cart from localStorage and fetch user orders on mount
   useEffect(() => {
     const savedCart: CartItem[] = JSON.parse(
       localStorage.getItem("cart") || "[]"
@@ -131,7 +130,6 @@ export const UserCart = () => {
 
       alert(`✅ Order placed successfully! Order ID: ${data.order._id}`);
 
-      // Clear cart and refresh orders
       setCartItems([]);
       localStorage.removeItem("cart");
       fetchUserOrders();
@@ -169,69 +167,71 @@ export const UserCart = () => {
               <Card className="flex-1 w-[471px] h-[532px] relative">
                 <CardHeader>
                   <CardTitle>My cart</CardTitle>
-                  <div className="h-30 flex flex-col gap-4 overflow-y-auto max-h-[300px]">
+                  <div className=" flex flex-col gap-4 h-full max-h-104 overflow-scroll">
                     {cartItems.length === 0 ? (
                       <p className="text-gray-400">Your cart is empty</p>
                     ) : (
                       cartItems.map((item) => (
-                        <div key={item.foodId} className="h-30 flex gap-[10px]">
-                          <Image
-                            src={item.imageUrl}
-                            alt={item.name}
-                            width={124}
-                            height={120}
-                          />
-                          <div className="w-[305px] h-30 flex flex-col gap-6">
-                            <div className="w-[305px] h-15 flex flex-col relative">
-                              <div className="w-[259px] h-7">
-                                <p className="text-red-500 text-base font-bold leading-7">
-                                  {item.name}
-                                </p>
-                              </div>
-                              <div className="w-[259px] h-8">
-                                <h1 className="text-foreground text-xs font-normal leading-4">
-                                  ${item.price.toFixed(2)} each
-                                </h1>
-                              </div>
-                              <button
-                                className="absolute top-0 right-0 w-9 h-9 rounded-full border-1 border-[#EF4444] flex items-center justify-center"
-                                onClick={() => handleRemoveItem(item.foodId)}
-                              >
-                                <IoIosClose className="text-[#EF4444]" />
-                              </button>
-                            </div>
-                            <div className="w-[305px] h-9 flex items-center justify-between">
-                              <div className="w-[105px] h-9 flex items-center justify-between">
-                                <div
-                                  className="w-9 h-9 flex items-center justify-center text-xl cursor-pointer"
-                                  onClick={() =>
-                                    handleQuantityChange(item.foodId, -1)
-                                  }
+                        <div key={item.foodId}>
+                          <div className="h-30 flex gap-[10px]">
+                            <Image
+                              src={item.imageUrl}
+                              alt={item.name}
+                              width={124}
+                              height={120}
+                            />
+                            <div className="w-[305px] h-30 flex flex-col gap-6">
+                              <div className="w-[305px] h-15 flex flex-col relative">
+                                <div className="w-[259px] h-7">
+                                  <p className="text-red-500 text-base font-bold leading-7">
+                                    {item.name}
+                                  </p>
+                                </div>
+                                <div className="w-[259px] h-8">
+                                  <h1 className="text-foreground text-xs font-normal leading-4">
+                                    ${item.price.toFixed(2)} each
+                                  </h1>
+                                </div>
+                                <button
+                                  className="absolute top-0 right-0 w-9 h-9 rounded-full border-1 border-[#EF4444] flex items-center justify-center"
+                                  onClick={() => handleRemoveItem(item.foodId)}
                                 >
-                                  -
-                                </div>
-                                <div className="text-[#09090B] font-semibold text-lg/7">
-                                  {item.quantity}
-                                </div>
-                                <div
-                                  className="w-9 h-9 flex items-center justify-center text-xl cursor-pointer"
-                                  onClick={() =>
-                                    handleQuantityChange(item.foodId, 1)
-                                  }
-                                >
-                                  +
-                                </div>
+                                  <IoIosClose className="text-[#EF4444]" />
+                                </button>
                               </div>
-                              <div className="w-[93px] h-7 text-right text-[#09090B] font-semibold text-lg/7">
-                                ${(item.price * item.quantity).toFixed(2)}
+                              <div className="w-[305px] h-9 flex items-center justify-between">
+                                <div className="w-[105px] h-9 flex items-center justify-between">
+                                  <div
+                                    className="w-9 h-9 flex items-center justify-center text-xl cursor-pointer"
+                                    onClick={() =>
+                                      handleQuantityChange(item.foodId, -1)
+                                    }
+                                  >
+                                    -
+                                  </div>
+                                  <div className="text-[#09090B] font-semibold text-lg/7">
+                                    {item.quantity}
+                                  </div>
+                                  <div
+                                    className="w-9 h-9 flex items-center justify-center text-xl cursor-pointer"
+                                    onClick={() =>
+                                      handleQuantityChange(item.foodId, 1)
+                                    }
+                                  >
+                                    +
+                                  </div>
+                                </div>
+                                <div className="w-[93px] h-7 text-right text-[#09090B] font-semibold text-lg/7">
+                                  ${(item.price * item.quantity).toFixed(2)}
+                                </div>
                               </div>
                             </div>
                           </div>
+                          <Separator className="w-full border border-dashed border-[rgba(9,9,11,0.5)] bg-transparent" />
                         </div>
                       ))
                     )}
                   </div>
-                  <Separator className="w-full border border-dashed border-[rgba(9,9,11,0.5)] bg-transparent" />
                 </CardHeader>
                 <CardContent className="flex gap-6 w-[439px] h-[116px] absolute bottom-4 right-4 p-0">
                   <div className="flex flex-col gap-3 w-full h-full">

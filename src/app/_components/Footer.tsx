@@ -29,10 +29,15 @@ export const Footer = () => {
     <div className="bg-primary">
       <div>
         <div className="w-full h-15"></div>
-        <div className="bg-red-500  mb-19 py-7 px-24.5">
-          <p className="text-[30px] leading-9 text-primary-foreground font-semibold">
-            Fresh fast delivered
-          </p>
+        <div className="bg-red-500 flex mb-19 py-7 px-24.5 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="text-[30px] leading-9 text-white font-semibold whitespace-nowrap"
+            >
+              Fresh fast delivered
+            </div>
+          ))}
         </div>
         <div className="flex px-22 items-start justify-center mb-26">
           <img src={"./footerLogo.svg"} className="mr-55" />
