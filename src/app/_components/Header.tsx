@@ -15,7 +15,7 @@ export const Header = () => {
   useEffect(() => {
     const email = localStorage.getItem("userEmail");
     if (!email) {
-      router.push("/login");
+      // router.push("/login");
     } else {
       setUserEmail(email);
     }
@@ -26,7 +26,7 @@ export const Header = () => {
     localStorage.removeItem("userId");
     router.push("/login");
   };
-  console.log("delivery address", deliveryAddress);
+  // console.log("delivery address", deliveryAddress);
   return (
     <div className="bg-[#18181B] w-full h-17 px-22 flex items-center justify-between">
       <Image src="/NomNomSwift.svg" alt="icon" width={146} height={44} />

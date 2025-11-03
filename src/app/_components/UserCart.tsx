@@ -18,6 +18,7 @@ import { CiShoppingCart } from "react-icons/ci";
 import { IoIosClose } from "react-icons/io";
 import { CartItem } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 
 let backendUrl = "";
 
@@ -79,12 +80,15 @@ export const UserCart = () => {
       setLoadingOrders(false);
     }
   };
+  const router = useRouter();
 
   const handleCheckout = async () => {
     try {
       const userId = localStorage.getItem("userId");
       if (!userId) {
         alert("⚠️ Please log in first!");
+        router.push("/login");
+
         return;
       }
 
@@ -165,15 +169,15 @@ export const UserCart = () => {
               className="flex flex-col flex-1 h-full gap-6"
             >
               <Card className="flex-1 w-[471px] h-[532px] relative">
-                <CardHeader>
+                <CardHeader className="p-4">
                   <CardTitle>My cart</CardTitle>
-                  <div className=" flex flex-col gap-4 h-full max-h-104 overflow-scroll">
+                  <div className="w-[439px] flex flex-col gap-4 h-full max-h-104 overflow-y-scroll overflow-x-hidden">
                     {cartItems.length === 0 ? (
                       <p className="text-gray-400">Your cart is empty</p>
                     ) : (
                       cartItems.map((item) => (
                         <div key={item.foodId}>
-                          <div className="h-30 flex gap-[10px]">
+                          <div className="w-[305px] h-30 flex gap-[10px]">
                             <Image
                               src={item.imageUrl}
                               alt={item.name}
