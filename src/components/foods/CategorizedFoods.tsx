@@ -17,7 +17,7 @@ export const CategorizedFoods = ({
         {foods.map((food) => (
           <div
             key={food._id}
-            className="w-80 rounded-2xl flex flex-col border p-4 gap-4 bg-white shadow-md hover:shadow-lg transition"
+            className="w-99 h-85 rounded-2xl flex flex-col border p-4 gap-4 bg-white shadow-md hover:shadow-lg transition"
           >
             {/* Image & Add Button */}
             <div className="relative w-full h-52">
