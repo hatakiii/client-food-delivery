@@ -7,7 +7,7 @@ export const MainPageSkeleton = () => {
       <Skeleton className="w-20 h-9" />
       {Array.from({ length: 5 }).map((_, i) => (
         <div key={i} className="flex">
-          <Skeleton className="w-99 h-85" />
+          <Skeleton className="w-99 h-85 bg-white" />
         </div>
       ))}
     </div>
