@@ -152,7 +152,7 @@ export const UserCart = () => {
           </Button>
         </SheetTrigger>
 
-        <SheetContent className="flex flex-col p-8 overflow-y-auto bg-[#71717a] w-[535px] h-full overflow-hidden">
+        <SheetContent className="flex flex-col p-8 overflow-y-auto bg-[#71717a] w-[535px] h-screen overflow-scroll">
           <SheetHeader className="p-0 w-full h-9 ">
             <SheetTitle>Order details</SheetTitle>
           </SheetHeader>
@@ -168,10 +168,10 @@ export const UserCart = () => {
               value="card"
               className="flex flex-col flex-1 h-full gap-6"
             >
-              <Card className="flex-1 w-[471px] h-[532px] relative">
+              <Card className="flex-1 w-[471px] max-h-[532px] relative">
                 <CardHeader className="p-4">
                   <CardTitle>My cart</CardTitle>
-                  <div className="w-[439px] flex flex-col gap-4 h-full max-h-104 overflow-y-scroll overflow-x-hidden">
+                  <div className="w-[439px] flex flex-col gap-4 max-h-72 overflow-y-scroll overflow-hidden ">
                     {cartItems.length === 0 ? (
                       <p className="text-gray-400">Your cart is empty</p>
                     ) : (
@@ -237,7 +237,7 @@ export const UserCart = () => {
                     )}
                   </div>
                 </CardHeader>
-                <CardContent className="flex gap-6 w-[439px] h-[116px] absolute bottom-4 right-4 p-0">
+                <CardContent className="flex gap-6 w-[439px] h-[116px] bottom-4 right-4 px-4">
                   <div className="flex flex-col gap-3 w-full h-full">
                     <Label
                       htmlFor="tabs-demo-name"
