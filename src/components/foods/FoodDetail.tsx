@@ -19,6 +19,7 @@ interface FoodDetailProps {
 export const FoodDetail = ({ food }: FoodDetailProps) => {
   const [quantity, setQuantity] = useState(1);
   const [, setCartChanged] = useState(false);
+  const [open, setOpen] = useState(false);
   const handleAddToCart = () => {
     if (!food._id) {
       alert("❌ Cannot add item: invalid food ID");
@@ -46,10 +47,12 @@ export const FoodDetail = ({ food }: FoodDetailProps) => {
 
     setCartChanged((prev) => !prev);
     window.dispatchEvent(new Event("cartUpdated"));
+    // close dialog after user dismisses alert
+    setOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"

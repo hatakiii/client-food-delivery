@@ -36,11 +36,32 @@ export const UserCart = () => {
   const [loadingOrders, setLoadingOrders] = useState(false);
 
   useEffect(() => {
-    const savedCart: CartItem[] = JSON.parse(
-      localStorage.getItem("cart") || "[]"
-    );
-    setCartItems(savedCart);
+    const loadCartFromStorage = () => {
+      const savedCart: CartItem[] = JSON.parse(
+        localStorage.getItem("cart") || "[]"
+      );
+      setCartItems(savedCart);
+    };
+
+    // initial load
+    loadCartFromStorage();
     fetchUserOrders();
+
+    // update when other components dispatch a custom event (same tab)
+    const onCartUpdated = () => loadCartFromStorage();
+
+    // update when storage changes in other tabs (cross-tab)
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "cart") loadCartFromStorage();
+    };
+
+    window.addEventListener("cartUpdated", onCartUpdated);
+    window.addEventListener("storage", onStorage);
+
+    return () => {
+      window.removeEventListener("cartUpdated", onCartUpdated);
+      window.removeEventListener("storage", onStorage as any);
+    };
   }, []);
 
   const handleRemoveItem = (foodId: string) => {
@@ -158,9 +179,19 @@ export const UserCart = () => {
           </SheetHeader>
 
           <Tabs defaultValue="card" className="w-[471px] h-full gap-6">
-            <TabsList className="w-full h-11 bg-white">
-              <TabsTrigger value="card">Card</TabsTrigger>
-              <TabsTrigger value="order">Order</TabsTrigger>
+            <TabsList className="w-full h-11 bg-white rounded-full ">
+              <TabsTrigger
+                value="card"
+                className="data-[state=active]:bg-red-500 data-[state=active]:text-white rounded-full text-lg/7"
+              >
+                Card
+              </TabsTrigger>
+              <TabsTrigger
+                value="order"
+                className="data-[state=active]:bg-red-500 data-[state=active]:text-white rounded-full text-lg/7"
+              >
+                Order
+              </TabsTrigger>
             </TabsList>
 
             {/* Card */}
@@ -168,86 +199,90 @@ export const UserCart = () => {
               value="card"
               className="flex flex-col flex-1 h-full gap-6"
             >
-              <Card className="flex-1 w-[471px] max-h-[532px] relative">
+              <Card className="flex-1 w-[471px] max-h-[532px] flex flex-col">
                 <CardHeader className="p-4">
                   <CardTitle>My cart</CardTitle>
-                  <div className="w-[439px] flex flex-col gap-4 max-h-72 overflow-y-scroll overflow-hidden ">
-                    {cartItems.length === 0 ? (
-                      <p className="text-gray-400">Your cart is empty</p>
-                    ) : (
-                      cartItems.map((item) => (
-                        <div key={item.foodId}>
-                          <div className="w-[305px] h-30 flex gap-[10px]">
-                            <Image
-                              src={item.imageUrl}
-                              alt={item.name}
-                              width={124}
-                              height={120}
-                            />
-                            <div className="w-[305px] h-30 flex flex-col gap-6">
-                              <div className="w-[305px] h-15 flex flex-col relative">
-                                <div className="w-[259px] h-7">
-                                  <p className="text-red-500 text-base font-bold leading-7">
-                                    {item.name}
-                                  </p>
-                                </div>
-                                <div className="w-[259px] h-8">
-                                  <h1 className="text-foreground text-xs font-normal leading-4">
-                                    ${item.price.toFixed(2)} each
-                                  </h1>
-                                </div>
-                                <button
-                                  className="absolute top-0 right-0 w-9 h-9 rounded-full border-1 border-[#EF4444] flex items-center justify-center"
-                                  onClick={() => handleRemoveItem(item.foodId)}
-                                >
-                                  <IoIosClose className="text-[#EF4444]" />
-                                </button>
+                </CardHeader>
+
+                {/* Items list - takes remaining space and scrolls */}
+                <div className="px-4 flex-1 overflow-auto w-full">
+                  {cartItems.length === 0 ? (
+                    <p className="text-gray-400">Your cart is empty</p>
+                  ) : (
+                    cartItems.map((item) => (
+                      <div key={item.foodId}>
+                        <div className="flex gap-3 py-3 items-start">
+                          <Image
+                            src={item.imageUrl}
+                            alt={item.name}
+                            width={96}
+                            height={96}
+                            className="rounded-md object-cover"
+                          />
+                          <div className="flex-1 flex flex-col gap-2">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="text-red-500 text-base font-bold leading-6">
+                                  {item.name}
+                                </p>
+                                <p className="text-foreground text-xs">
+                                  ${item.price.toFixed(2)} each
+                                </p>
                               </div>
-                              <div className="w-[305px] h-9 flex items-center justify-between">
-                                <div className="w-[105px] h-9 flex items-center justify-between">
-                                  <div
-                                    className="w-9 h-9 flex items-center justify-center text-xl cursor-pointer"
-                                    onClick={() =>
-                                      handleQuantityChange(item.foodId, -1)
-                                    }
-                                  >
-                                    -
-                                  </div>
-                                  <div className="text-[#09090B] font-semibold text-lg/7">
-                                    {item.quantity}
-                                  </div>
-                                  <div
-                                    className="w-9 h-9 flex items-center justify-center text-xl cursor-pointer"
-                                    onClick={() =>
-                                      handleQuantityChange(item.foodId, 1)
-                                    }
-                                  >
-                                    +
-                                  </div>
+                              <button
+                                className="w-8 h-8 rounded-full border border-[#EF4444] flex items-center justify-center"
+                                onClick={() => handleRemoveItem(item.foodId)}
+                              >
+                                <IoIosClose className="text-[#EF4444]" />
+                              </button>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <div
+                                  className="w-9 h-9 flex items-center justify-center text-xl cursor-pointer"
+                                  onClick={() =>
+                                    handleQuantityChange(item.foodId, -1)
+                                  }
+                                >
+                                  -
                                 </div>
-                                <div className="w-[93px] h-7 text-right text-[#09090B] font-semibold text-lg/7">
-                                  ${(item.price * item.quantity).toFixed(2)}
+                                <div className="text-[#09090B] font-semibold text-lg">
+                                  {item.quantity}
                                 </div>
+                                <div
+                                  className="w-9 h-9 flex items-center justify-center text-xl cursor-pointer"
+                                  onClick={() =>
+                                    handleQuantityChange(item.foodId, 1)
+                                  }
+                                >
+                                  +
+                                </div>
+                              </div>
+                              <div className="text-right text-[#09090B] font-semibold">
+                                ${(item.price * item.quantity).toFixed(2)}
                               </div>
                             </div>
                           </div>
-                          <Separator className="w-full border border-dashed border-[rgba(9,9,11,0.5)] bg-transparent" />
                         </div>
-                      ))
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="flex gap-6 w-[439px] h-[116px] bottom-4 right-4 px-4">
-                  <div className="flex flex-col gap-3 w-full h-full">
+                        <Separator className="w-full border border-dashed border-[rgba(9,9,11,0.5)] bg-transparent" />
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Delivery input pinned to bottom */}
+                <CardContent className="px-4 py-4 bg-white bottom-0">
+                  <div className="flex flex-col gap-3 w-full">
                     <Label
                       htmlFor="tabs-demo-name"
-                      className="text-[#71717A] text-xl/7 font-semibold"
+                      className="text-[#71717A] text-xl font-semibold"
                     >
                       Delivery Location
                     </Label>
                     <Input
                       id="tabs-demo-name"
-                      className="w-full h-15 flex flex-col items-start"
+                      className="w-full h-12"
                       placeholder="Please share your complete address"
                       value={deliveryAddress}
                       onChange={(e) => setDeliveryAddress(e.target.value)}
@@ -260,21 +295,27 @@ export const UserCart = () => {
                   <CardHeader>
                     <CardTitle>Payment info</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="flex">
-                      <p className="flex-1">Items</p>
-                      <h1>${totalPrice.toFixed(2)}</h1>
+                  <CardContent className="flex flex-col gap-5">
+                    <div>
+                      <div className="flex">
+                        <p className="flex-1">Items</p>
+                        <h1>${totalPrice.toFixed(2)}</h1>
+                      </div>
+                      <div className="flex">
+                        <p className="flex-1">Shipping</p>
+                        <h1>$0.99</h1>
+                      </div>
+                      <Separator className="w-full" />
+                      <div className="flex">
+                        <p className="flex-1">Total</p>
+                        <h1>${(totalPrice + 0.99).toFixed(2)}</h1>
+                      </div>
                     </div>
-                    <div className="flex">
-                      <p className="flex-1">Shipping</p>
-                      <h1>$0.99</h1>
-                    </div>
-                    <Separator className="w-full" />
-                    <div className="flex">
-                      <p className="flex-1">Total</p>
-                      <h1>${(totalPrice + 0.99).toFixed(2)}</h1>
-                    </div>
-                    <Button className="w-full" onClick={() => handleCheckout()}>
+
+                    <Button
+                      className="w-full bg-red-500 text-sm/5 rounded-full"
+                      onClick={() => handleCheckout()}
+                    >
                       Checkout
                     </Button>
                   </CardContent>
